@@ -29,13 +29,13 @@ Before running the project, ensure you have installed:
 ## 📁 Project Structure
 
 ```text
-src/main/java/com/skytv/assetment/users      → Application and source code
-src/main/resources/db/changelog     → Liquibase changelogs
+src/main/java/com/skytv/assetment/users           → Application and source code
+src/main/resources/db/changelog                   → Liquibase changelogs
 src/test/java/com/skytv/assetment/users/users     → Unit tests
-Dockerfile                          → Multi-stage build
-docker-compose.yml                  → App + PostgreSQL setup
-README.md                           → This file
-skytv-user-management.json → Postman Collection for API testing
+Dockerfile                                        → Multi-stage build
+docker-compose.yml                                → App + PostgreSQL setup
+README.md                                         → This file
+skytv-user-management.json                        → Postman Collection for API testing
 ```
 
 ---
