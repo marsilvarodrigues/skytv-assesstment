@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: skytv-service
+
+  datasource:
+    url: ${POSTGRES_DB_URL:jdbc:postgresql://localhost:5432/usersdb}
+    username: ${POSTGRES_DB_USERNAME:users}
+    password: ${POSTGRES_DB_PASSWORD:userspass}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+logging:
+  level:
+    root: INFO
+  structured:
+    json:
+        add:
+            service.environment: ${APP_ENV:local}
+            service.name: ${SPRING_APPLICATION_NAME:skytv-service}
+            service.version: ${APP_VERSION:1.0}
+
+security:
+  jwt:
+    secret: "my-secret-key-that-needs-at-least-32-characters!"
+    expiration: 86400000
