@@ -10,6 +10,7 @@ This project is a complete Spring Boot REST API implementing:
 - Unit tests (services + controllers)
 - Dockerfile and docker-compose support
 - OpenAPI 3 documentation with Swagger UI
+- Postman Collection for easy API testing
 
 The application is fully ready to run using Maven, Docker, or an IDE.
 
@@ -34,6 +35,7 @@ src/test/java/com/skytv/assetment/users/users     → Unit tests
 Dockerfile                          → Multi-stage build
 docker-compose.yml                  → App + PostgreSQL setup
 README.md                           → This file
+skytv-user-management.json → Postman Collection for API testing
 ```
 
 ---
@@ -228,14 +230,6 @@ On each **push** and **pull request** to the `main` branch, it will:
 mvn -B clean verify
 ```
 
-You can customize:
-
-- Branch filters (`main`, `develop`, etc.)
-- Java version
-- Additional steps such as Docker image build and push
-
----
-
 ## ✔️ Summary
 
 This project includes everything needed to test and evaluate:
@@ -248,5 +242,6 @@ This project includes everything needed to test and evaluate:
 - Dockerized environment  
 - CI/CD with GitHub Actions  
 - Complete unit test suite
+- Postman Collection for easy API testing
 
 Extend it as needed by adding more entities, endpoints, or cloud deployment configurations. 🚀
