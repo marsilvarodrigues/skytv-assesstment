@@ -1,11 +1,8 @@
 package com.skytv.assetment.users.service;
 
 
+import com.skytv.assetment.users.dto.*;
 import com.skytv.assetment.users.exception.UserDuplicatedException;
-import com.skytv.assetment.users.dto.ExternalProjectRequest;
-import com.skytv.assetment.users.dto.ExternalProjectResponse;
-import com.skytv.assetment.users.dto.UserRequest;
-import com.skytv.assetment.users.dto.UserResponse;
 import com.skytv.assetment.users.entity.ExternalProject;
 import com.skytv.assetment.users.entity.User;
 import com.skytv.assetment.users.exception.ResourceNotFoundException;
@@ -13,6 +10,7 @@ import com.skytv.assetment.users.repository.ExternalProjectRepository;
 import com.skytv.assetment.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,10 +80,18 @@ public class UserService {
         log.info("Adding external project to user {}", userId);
         User user = findUserOrThrow(userId);
 
-        ExternalProject project = ExternalProject.builder()
-                .name(request.name())
-                .user(user)
-                .build();
+        ExternalProject project = null;
+        if(StringUtils.isBlank(request.id()) ) {
+            project = ExternalProject.builder()
+                    .name(request.name())
+                    .build();
+        } else {
+            project = externalProjectRepository.findById(request.id())
+                    .orElseThrow(() -> new ResourceNotFoundException("External Project %s not found".formatted(request.id())));
+        }
+        project.addUser(user);
+
+
 
         ExternalProject saved = externalProjectRepository.save(project);
         log.info("Added external project to user {}", userId);
@@ -116,5 +122,16 @@ public class UserService {
                 .toList();
 
         return new UserResponse(user.getId(), user.getEmail(), user.getName(), projects);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ShortUserResponse> getAllUsers() {
+        log.info("Fetching all users");
+        return userRepository.findAll()
+                .stream()
+                .map(u -> new ShortUserResponse(u.getId(), u.getEmail(), u.getName()))
+                .toList();
+
+
     }
 }

@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "Java Senior Project API",
+    "name": "SKY TV Java Assesstment",
     "_postman_id": "d9f5a9d2-0000-0000-0000-java-senior-project",
-    "description": "Collection to test Java Senior Project API (JWT auth, users, external projects, actuator, metrics, OpenAPI).",
+    "description": "Collection to test SKY TV Java Assesstment (JWT auth, users, external projects, actuator, metrics, OpenAPI).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -273,9 +273,34 @@
                 "external-projects"
               ]
             },
-            "description": "Adds an external project to the admin user (ID = 1)."
+            "description": "Adds an external project to the admin user (ID = 1) and stores the external project ID in `externalProjectId`."
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 or 200\", function () {",
+                  "    pm.expect(pm.response.code === 201 || pm.response.code === 200).to.be.true;",
+                  "});",
+                  "",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.id) {",
+                  "        pm.collectionVariables.set(\"externalProjectId\", jsonData.id);",
+                  "        console.log(\"External Project ID saved to collection variable 'externalProjectId':\", jsonData.id);",
+                  "    } else {",
+                  "        console.warn(\"No 'id' field found in create external project response\");",
+                  "    }",
+                  "} catch (e) {",
+                  "    console.error(\"Failed to parse create external project response as JSON\", e);",
+                  "}"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List External Projects for Admin User (ID = 1)",
@@ -301,6 +326,58 @@
               ]
             },
             "description": "Lists all external projects associated with the admin user (ID = 1)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get External Project by ID (externalProjectId)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/external-projects/{{externalProjectId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "external-projects",
+                "{{externalProjectId}}"
+              ]
+            },
+            "description": "Gets a single external project by ID using ExternalProjectController."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All External Projects",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/external-projects/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "external-projects",
+                ""
+              ]
+            },
+            "description": "Gets all external projects using ExternalProjectController."
           },
           "response": []
         }
@@ -470,6 +547,10 @@
     },
     {
       "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "externalProjectId",
       "value": ""
     }
   ]

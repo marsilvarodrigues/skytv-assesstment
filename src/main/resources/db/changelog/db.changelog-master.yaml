@@ -115,3 +115,49 @@ databaseChangeLog:
               - column:
                   name: user_id
                   valueNumeric: 2
+
+  - changeSet:
+      id: 5-convert-users-externalprojects-to-many-to-many
+      author: marcelo
+      changes:
+        - createTable:
+            tableName: users_external_projects
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: external_project_id
+                  type: VARCHAR(36)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: users_external_projects
+            columnNames: user_id,external_project_id
+            constraintName: pk_users_external_projects
+        - addForeignKeyConstraint:
+            baseTableName: users_external_projects
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_uep_users
+        - addForeignKeyConstraint:
+            baseTableName: users_external_projects
+            baseColumnNames: external_project_id
+            referencedTableName: external_projects
+            referencedColumnNames: id
+            constraintName: fk_uep_external_projects
+        - sql:
+            sql: >
+              INSERT INTO users_external_projects (user_id, external_project_id)
+              SELECT user_id, id FROM external_projects WHERE user_id IS NOT NULL;
+        - dropForeignKeyConstraint:
+            baseTableName: external_projects
+            constraintName: fk_external_projects_users
+        - dropColumn:
+            tableName: external_projects
+            columnName: user_id
+
+

@@ -1,7 +1,10 @@
 package com.skytv.assetment.users.service;
 
+import com.skytv.assetment.users.dto.ExternalProjectRequest;
+import com.skytv.assetment.users.dto.ShortUserResponse;
 import com.skytv.assetment.users.dto.UserRequest;
 import com.skytv.assetment.users.dto.UserResponse;
+import com.skytv.assetment.users.entity.ExternalProject;
 import com.skytv.assetment.users.entity.User;
 import com.skytv.assetment.users.exception.ResourceNotFoundException;
 import com.skytv.assetment.users.exception.UserDuplicatedException;
@@ -13,8 +16,11 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -124,4 +130,42 @@ class UserServiceTest {
 
         verify(userRepository).delete(existing);
     }
+
+    @Test
+    void getAllUsers_shouldReturnList() {
+        when(userRepository.findAll()).thenReturn(List.of(
+                User.builder().id(1L).email("email@email.com").build()));
+
+        List<ShortUserResponse> users = userService.getAllUsers();
+        assertThat(users).hasSize(1);
+    }
+
+    @Test
+    void addUserToExternalProject_existedProject() {
+        var externalProject = new ExternalProjectRequest(UUID.randomUUID().toString(), "test");
+        var externalProjectEntity = mock(ExternalProject.class);
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(User.builder().id(1L).build()));
+        when(externalProjectRepository.findById(anyString())).thenReturn(Optional.of(externalProjectEntity));
+        when(externalProjectRepository.save(any(ExternalProject.class))).thenReturn(externalProjectEntity);
+
+        userService.addExternalProject(1L, externalProject);
+
+        verify(externalProjectRepository).save(externalProjectEntity);
+    }
+
+    @Test
+    void addUserToExternalProject_newProject() {
+        var externalProject = new ExternalProjectRequest("", "test");
+        var externalProjectEntity = mock(ExternalProject.class);
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(User.builder().id(1L).build()));
+        when(externalProjectRepository.save(any(ExternalProject.class))).thenReturn(externalProjectEntity);
+
+        userService.addExternalProject(1L, externalProject);
+
+        verify(externalProjectRepository, never()).findById(anyString());
+        verify(externalProjectRepository).save(any(ExternalProject.class));
+    }
+
 }

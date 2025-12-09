@@ -1,9 +1,6 @@
 package com.skytv.assetment.users.controller;
 
-import com.skytv.assetment.users.dto.ExternalProjectRequest;
-import com.skytv.assetment.users.dto.ExternalProjectResponse;
-import com.skytv.assetment.users.dto.UserRequest;
-import com.skytv.assetment.users.dto.UserResponse;
+import com.skytv.assetment.users.dto.*;
 import com.skytv.assetment.users.service.UserService;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
@@ -13,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +41,15 @@ public class UserController {
     public UserResponse getUser(@PathVariable Long id) {
         log.info("Get user by ID: {}", id);
         return userService.getUser(id);
+    }
+
+    @GetMapping("")
+    @Operation(summary = "Get user by ID")
+    @Timed(value = "users.all.get.time", description = "Time taken to get a list of users")
+    @Counted(value = "users.all.get.count", description = "Number of calls to get a list of users")
+    public ResponseEntity<List<ShortUserResponse>> getAllUsers() {
+        log.info("Get all users");
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PutMapping("/{id}")
