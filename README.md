@@ -1,4 +1,4 @@
-# Java Senior Project – User Management API (Spring Boot + JWT + Liquibase)
+# JKY TV Java Assesstment – User Management API (Spring Boot + JWT + Liquibase)
 
 This project is a complete Spring Boot REST API implementing:
 
@@ -111,10 +111,12 @@ curl http://localhost:8080/api/users/1 \
 
 ### External Project Management
 
-| Method | Endpoint                                   | Description          |
-|--------|--------------------------------------------|----------------------|
-| POST   | `/api/users/{id}/external-projects`        | Add project to user  |
-| GET    | `/api/users/{id}/external-projects`        | List user projects   |
+| Method | Endpoint                                   | Description                |
+|--------|--------------------------------------------|----------------------------|
+| POST   | `/api/users/{id}/external-projects`        | Add project to user        |
+| GET    | `/api/users/{id}/external-projects`        | List user projects         |
+| GET    | `/api/external-projects`                   | List all projects          |
+| GET    | `/api/external-projects/{id}`              | Get all users allocated    |
 
 ### Authentication
 
