@@ -185,6 +185,9 @@ Test coverage includes:
 - `UserService` unit tests
 - `UserController` tests (MockMvc)
 - `AuthController` tests
+- `ExternalProjectService`unit tests
+- `ExternalProjectController`tests (MockMvc)
+- `ExternalProjectRepository`unit test with TestContainer
 
 These tests validate service logic, REST endpoints behavior and JWT login flow (mocked).
 
@@ -213,13 +216,6 @@ To run with PostgreSQL, start via Docker Compose or point `SPRING_PROFILES_ACTIV
 
 ---
 
-## 🔁 CI/CD with GitHub Actions
-
-A GitHub Actions workflow is included at:
-
-```text
-.github/workflows/maven.yml
-```
 
 On each **push** and **pull request** to the `main` branch, it will:
 
